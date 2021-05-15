@@ -1,0 +1,28 @@
+version: "3.3"
+services:
+  nginx:
+    build: ./.build/nginx
+    volumes:
+      - ./:/app
+      - .build/nginx/nginx:/etc/nginx
+    depends_on:
+      - php
+  php:
+    build:
+      context: ./.build/php
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    links:
+      - postgres
+    volumes:
+      - ./:/app
+      - ~/.ssh:/var/www/.ssh
+  postgres:
+    build: ./.build/postgres
+    #image: postgres:12
+    environment:
+      TZ: Europe/Moscow
+      POSTGRES_PASSWORD: socialmediaholding
+      POSTGRES_USER: socialmediaholding
+      POSTGRES_DB: socialmediaholding

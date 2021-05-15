@@ -1,0 +1,29 @@
+version: "3.3"
+services:
+  nginx:
+    ports:
+      - "80:80"
+    networks:
+      - internal
+  php:
+    environment:
+      XDEBUG_CONFIG: "client_host=192.168.221.1"
+      PHP_IDE_CONFIG: "serverName=Docker"
+    networks:
+      - internal
+  postgres:
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
+    networks:
+      - internal
+volumes:
+  data:
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.221.0/28
